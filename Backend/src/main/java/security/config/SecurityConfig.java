@@ -17,7 +17,7 @@ import security.jwt.JwtAuthFilter;
 @Configuration
 @AllArgsConstructor
 public class SecurityConfig {
-    private final CustomUserDetailsService userDetailsService;
+    private final CustomerUserDetailsService userDetailsService;
     private final JwtAuthFilter jwtAuthFilter;
 
     @Bean

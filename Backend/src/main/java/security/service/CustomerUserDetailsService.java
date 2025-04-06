@@ -1,6 +1,6 @@
 package security.service;
 
-import repository.userRepo;
+import repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,7 +19,7 @@ public class CustomerUserDetailsService implements UserDetailsService {
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
-                .password(user.getPassword())
+                .password(((entity.User) user).getPassword())
                 .authorities("USER")
                 .build();
     }

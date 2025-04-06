@@ -1,6 +1,7 @@
 package controller;
 
 import entity.User;
+import repository.UserRepo;
 import security.jwt.JwtUtill;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,14 +14,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import security.service.AuthRequest;
+import security.service.AuthResponse;
 
 @RestController
 @RequestMapping("auth")
-@RequiredArgsConstructor
+
 public class AuthController {
     private final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
-    private final UserRepository userRepository;
+    private final JwtUtill jwtUtil;
+    private final UserRepo userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
@@ -31,6 +34,17 @@ public class AuthController {
         String token = jwtUtil.generateToken(request.getUsername());
         return ResponseEntity.ok(new AuthResponse(token));
     }
+
+    public AuthController(AuthenticationManager authenticationManager,
+                          JwtUtill jwtUtil,
+                          UserRepo userRepository,
+                          PasswordEncoder passwordEncoder) {
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody AuthRequest request) {
@@ -45,17 +59,4 @@ public class AuthController {
         userRepository.save(user);
         return ResponseEntity.ok("User registered");
     }
-
-    @Data
-    static class AuthRequest {
-        private String username;
-        private String password;
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class AuthResponse {
-        private String token;
-    }
-
 }

@@ -1,5 +1,6 @@
 package security.jwt;
 
+
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import security.service.CustomerUserDetailsService;
 
 import java.io.IOException;
 
@@ -15,8 +17,8 @@ import java.io.IOException;
 
 public class JwtAuthFilter extends GenericFilter {
 
-    private final JwtUtil jwtUtil;
-    private final CustomUserDetailsService userDetailsService;
+    private final JwtUtill jwtUtil;
+    private final CustomerUserDetailsService userDetailsService;
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)

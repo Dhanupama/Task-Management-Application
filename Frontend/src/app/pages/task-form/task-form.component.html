@@ -1,0 +1,6 @@
+<h2>Create Task</h2>
+<form (ngSubmit)="saveTask()">
+  <input [(ngModel)]="task.title" name="title" placeholder="Title" required />
+  <textarea [(ngModel)]="task.description" name="description" placeholder="Description"></textarea>
+  <button type="submit">Save</button>
+</form>

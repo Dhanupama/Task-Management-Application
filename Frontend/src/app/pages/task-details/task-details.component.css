@@ -1,0 +1,22 @@
+.details-container {
+    padding: 20px;
+  }
+  
+  mat-card {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  mat-card-content p {
+    margin: 10px 0;
+  }
+  
+  .error,
+  .loading {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .error {
+    color: red;
+  }

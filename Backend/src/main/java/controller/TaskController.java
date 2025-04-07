@@ -1,38 +1,42 @@
 package controller;
 
-import dto.TaskDTO;
-import lombok.RequiredArgsConstructor;
+import entity.Task;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import service.TaskService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/task")
-@RequiredArgsConstructor
-
-
+@RequestMapping("/api/tasks")
+@CrossOrigin (origins = "http://localhost:4200")// allow frontend access
 public class TaskController {
+
     private final TaskService taskService;
 
-    @GetMapping
-    public List<TaskDTO> getAllTasks() {
+    @Autowired
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
+    }
+
+    @GetMapping("/{id}")
+    public List<Task> getAllTasks() {
         return taskService.getAllTasks();
     }
 
     @GetMapping("/{id}")
-    public TaskDTO getTask(@PathVariable Long id) {
+    public Task getTask(@PathVariable Long id) {
         return taskService.getTaskById(id);
     }
 
     @PostMapping
-    public TaskDTO createTask(@RequestBody TaskDTO taskDTO) {
-        return taskService.createTask(taskDTO);
+    public Task createTask(@RequestBody Task task) {
+        return taskService.createTask(task);
     }
 
     @PutMapping("/{id}")
-    public TaskDTO updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
-        return taskService.updateTask(id, taskDTO);
+    public Task updateTask(@PathVariable Long id, @RequestBody Task task) {
+        return taskService.updateTask(id, task);
     }
 
     @DeleteMapping("/{id}")
@@ -40,3 +44,4 @@ public class TaskController {
         taskService.deleteTask(id);
     }
 }
+

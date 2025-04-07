@@ -1,57 +1,65 @@
 package service;
 
+
+
+
 import dto.TaskDTO;
 import entity.Task;
-import lombok.RequiredArgsConstructor;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import repository.TaskRepo;
 
-
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-
 @Service
-@RequiredArgsConstructor
+@Transactional
 public class TaskService {
-    private final TaskRepo taskRepository;
+
+    private final TaskRepo taskRepo;
     private final ModelMapper modelMapper;
 
-    public TaskDTO createTask(TaskDTO taskDTO) {
-        Task task = modelMapper.map(taskDTO, Task.class);
-        return modelMapper.map(taskRepository.save(task), TaskDTO.class);
+    @Autowired
+    public TaskService(TaskRepo taskRepo, ModelMapper modelMapper) {
+        this.taskRepo = taskRepo;
+        this.modelMapper = modelMapper;
     }
 
-    public List<TaskDTO> getAllTasks() {
-        return taskRepository.findAll()
+    public List<Task> getAllTasks() {
+        return taskRepo.findAll()
                 .stream()
-                .map(task -> modelMapper.map(task, TaskDTO.class))
+                .map(task -> modelMapper.map(task, Task.class))
                 .collect(Collectors.toList());
     }
 
-    public TaskDTO getTaskById(Long id) {
-        return taskRepository.findById(id)
-                .map(task -> modelMapper.map(task, TaskDTO.class))
-                .orElse(null);
+    public Task getTaskById(Long id) {
+        Optional<Task> task = taskRepo.findById(id);
+        return task.map(value -> modelMapper.map(value, Task.class)).orElse(null);
     }
 
-    public TaskDTO updateTask(Long id, TaskDTO taskDTO) {
-        return taskRepository.findById(id)
-                .map(task -> {
-                    task.setTitle(taskDTO.getTitle());
-                    task.setDescription(taskDTO.getDescription());
-                    task.setStatus(taskDTO.getStatus());
-                    return modelMapper.map(taskRepository.save(task), TaskDTO.class);
-                })
-                .orElse(null);
+    public Task createTask(Task taskDto) {
+        Task task = modelMapper.map(taskDto, Task.class);
+        Task savedTask = taskRepo.save(task);
+        return modelMapper.map(savedTask, Task.class);
     }
 
-    public boolean deleteTask(Long id) {
-        if (taskRepository.existsById(id)) {
-            taskRepository.deleteById(id);
-            return true;
+    public Task updateTask(Long id, Task taskDto) {
+        Optional<Task> existing = taskRepo.findById(id);
+        if (existing.isPresent()) {
+            Task task = existing.get();
+            task.setTitle(taskDto.getTitle());
+            task.setDescription(taskDto.getDescription());
+            task.setCompleted(taskDto.isCompleted());
+            return modelMapper.map(taskRepo.save(task), Task.class);
         }
-        return false;
+        return null;
+    }
+
+    public void deleteTask(Long id) {
+        taskRepo.deleteById(id);
     }
 }
+

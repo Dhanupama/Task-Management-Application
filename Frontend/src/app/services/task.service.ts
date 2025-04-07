@@ -1,3 +1,4 @@
+// src/app/services/task.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -11,14 +12,9 @@ export interface Task {
   createdAt?: string;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class TaskService {
-  getTaskById(id: number) {
-    throw new Error('Method not implemented.');
-  }
-  private apiUrl = 'http://localhost:8080/api/tasks'; // Adjust as needed
+  private baseUrl = 'http://localhost:8080/api/tasks';
 
   constructor(private http: HttpClient) {}
 
@@ -33,22 +29,22 @@ export class TaskService {
   }
 
   getTasks(): Observable<Task[]> {
-    return this.http.get<Task[]>(this.apiUrl).pipe(catchError(this.handleError));
+    return this.http.get<Task[]>(this.baseUrl).pipe(catchError(this.handleError));
   }
 
-  getTask(id: number): Observable<Task> {
-    return this.http.get<Task>(`${this.apiUrl}/${id}`).pipe(catchError(this.handleError));
+  getTaskById(id: number): Observable<Task> {
+    return this.http.get<Task>(`${this.baseUrl}/${id}`).pipe(catchError(this.handleError));
   }
 
   createTask(task: Task): Observable<Task> {
-    return this.http.post<Task>(this.apiUrl, task).pipe(catchError(this.handleError));
+    return this.http.post<Task>(this.baseUrl, task).pipe(catchError(this.handleError));
   }
 
   updateTask(id: number, task: Task): Observable<Task> {
-    return this.http.put<Task>(`${this.apiUrl}/${id}`, task).pipe(catchError(this.handleError));
+    return this.http.put<Task>(`${this.baseUrl}/${id}`, task).pipe(catchError(this.handleError));
   }
 
   deleteTask(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(catchError(this.handleError));
+    return this.http.delete<void>(`${this.baseUrl}/${id}`).pipe(catchError(this.handleError));
   }
 }
